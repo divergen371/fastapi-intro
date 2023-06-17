@@ -1,14 +1,25 @@
+# Standard Library
+from typing import Any
+
 # Third Party Library
 from fastapi import FastAPI
 
-myapp = FastAPI()
+app = FastAPI()
 
 
-@myapp.get(path="/")
+@app.get(path="/")
 def index() -> dict[str, dict[str, str]]:
     return {"data": {"name": "Test"}}
 
 
-@myapp.get(path="/about")
+@app.get(path="/about")
 def about() -> dict[str, set[str]]:
     return {"data": {"About page"}}
+
+
+@app.get(path="/blog/{id}")
+def show(id: int) -> dict[str, Any]:
+    """
+    docstring
+    """
+    return {"data": id}
