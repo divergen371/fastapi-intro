@@ -23,3 +23,11 @@ def show(id: int) -> dict[str, Any]:
     docstring
     """
     return {"data": id}
+
+
+@app.get(path="/blog/{id}/comments")
+def comments(id: int):
+    """
+    docstring
+    """
+    return {"data": {id, "comments"}}
