@@ -17,17 +17,17 @@ def about() -> dict[str, set[str]]:
     return {"data": {"About page"}}
 
 
-@app.get(path="/blog/{id}")
-def show(id: int) -> dict[str, Any]:
+@app.get(path="/blog/{article_id}")
+def show(article_id: int) -> dict[str, Any]:
     """
     docstring
     """
-    return {"data": id}
+    return {"data": article_id}
 
 
-@app.get(path="/blog/{id}/comments")
-def comments(id: int):
+@app.get(path="/blog/{article_id}/comments")
+def comments(article_id: int) -> dict[str, set]:
     """
     docstring
     """
-    return {"data": {id, "comments"}}
+    return {"data": {article_id, "comments"}}
