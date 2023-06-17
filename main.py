@@ -18,11 +18,14 @@ def about() -> dict[str, set[str]]:
 
 
 @app.get(path="/blog")
-def item(limit):
+def item(limit, published) -> dict[str, str]:
     """
     docstring
     """
-    return {"data": f"{limit}件"}
+    if published:
+        return {"data": f"{limit}件"}
+    else:
+        return {"data": "非公開"}
 
 
 @app.get(path="/blog/category")
