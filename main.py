@@ -17,17 +17,25 @@ def about() -> dict[str, set[str]]:
     return {"data": {"About page"}}
 
 
+@app.get(path="/blog")
+def item(limit):
+    """
+    docstring
+    """
+    return {"data": f"{limit}件"}
+
+
+@app.get(path="/blog/category")
+def category() -> dict[str, str]:
+    return {"data": "all category"}
+
+
 @app.get(path="/blog/{article_id}")
 def show(article_id: int) -> dict[str, Any]:
     """
     docstring
     """
     return {"data": article_id}
-
-
-@app.get(path="/blog/category")
-def category() -> dict[str, str]:
-    return {"data": "all category"}
 
 
 @app.get(path="/blog/{article_id}/comments")
