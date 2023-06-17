@@ -25,6 +25,11 @@ def show(article_id: int) -> dict[str, Any]:
     return {"data": article_id}
 
 
+@app.get(path="/blog/category")
+def category() -> dict[str, str]:
+    return {"data": "all category"}
+
+
 @app.get(path="/blog/{article_id}/comments")
 def comments(article_id: int) -> dict[str, set]:
     """
