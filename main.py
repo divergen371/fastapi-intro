@@ -4,6 +4,6 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
-@app.get("/")
-def index() -> str:
-    return "hello"
+@app.get(path="/")
+def index() -> dict[str, dict[str, str]]:
+    return {'data': {'name': 'Test'}}
