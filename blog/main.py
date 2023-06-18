@@ -2,14 +2,14 @@
 from typing import Any, Generator
 
 # Third Party Library
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Response
 from sqlalchemy.orm import Session
 
 # Local Library
 from . import models
 from .database import engine, session_local
 from .models import Base
-from .schema import Blog
+from .schema import Blog, ShowBlog
 
 app = FastAPI()
 
@@ -39,8 +39,12 @@ def all_fetch(db: Session = Depends(dependency=get_db)):
     return blogs
 
 
-@app.get("/blog/{article_id}", status_code=status.HTTP_200_OK)
-def show(article_id: int, db: Session = Depends(get_db)):
+@app.get(
+    "/blog/{article_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=ShowBlog,
+)
+def show(article_id: int, response: Response, db: Session = Depends(get_db)):
     blog = (
         db.query(models.Blog)
         .filter(models.Blog.article_id == article_id)
