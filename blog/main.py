@@ -1,6 +1,6 @@
 # Third Party Library
 from typing import Any, Generator
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, status
 from sqlalchemy.orm import Session
 
 # Local Library
@@ -22,7 +22,7 @@ def get_db() -> Generator[Session, Any, None]:
         db.close()
 
 
-@app.post(path="/blog")
+@app.post(path="/blog", status_code=status.HTTP_201_CREATED)
 def create(blog: Blog, db: Session = Depends(dependency=get_db)):
     new_blog = models.Blog(title=blog.title, body=blog.body)
     db.add(instance=new_blog)
