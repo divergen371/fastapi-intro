@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from . import models
 from .database import engine, session_local
 from .models import Base
-from .schema import Blog, ShowBlog
+from .schema import Blog, ShowBlog, User
 
 app = FastAPI()
 
@@ -83,3 +83,14 @@ def update(article_id, request: Blog, db: Session = Depends(get_db)):
     blog.update(request.dict())
     db.commit()
     return "Update completed."
+
+
+@app.post(path="/user")
+def create_user(request: User, db: Session = Depends(get_db)):
+    new_user = models.User(
+        name=request.name, email=request.email, password=request.password
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
