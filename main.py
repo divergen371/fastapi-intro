@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Any
+from typing import Any, Optional
 
 # Third Party Library
 from fastapi import FastAPI
@@ -18,10 +18,11 @@ def about() -> dict[str, set[str]]:
 
 
 @app.get(path="/blog")
-def item(limit, published) -> dict[str, str]:
+def item(limit=10, published: bool = True):
     """
     docstring
     """
+
     if published:
         return {"data": f"{limit}件"}
     else:
@@ -42,8 +43,8 @@ def show(article_id: int) -> dict[str, Any]:
 
 
 @app.get(path="/blog/{article_id}/comments")
-def comments(article_id: int) -> dict[str, set]:
+def comments(article_id: int, limit: Optional[str] = None) -> dict[str, set]:
     """
     docstring
     """
-    return {"data": {article_id, "comments"}}
+    return {"data": {article_id, limit, "comments"}}
