@@ -66,3 +66,16 @@ def delete(article_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return "Deletion of articles has been completed."
+
+
+@app.put(path="/blog/{article_id}", status_code=status.HTTP_202_ACCEPTED)
+def update(article_id, request: Blog, db: Session = Depends(get_db)):
+    blog = db.query(models.Blog).filter(models.Blog.article_id == article_id)
+    if not blog.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Blog with the id {article_id} is not found.",
+        )
+    blog.update(request.dict())
+    db.commit()
+    return "Update completed."
