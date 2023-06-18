@@ -29,3 +29,9 @@ def create(blog: Blog, db: Session = Depends(dependency=get_db)):
     db.commit()
     db.refresh(instance=new_blog)
     return new_blog
+
+
+@app.get(path="/blog")
+def all_fetch(db: Session = Depends(dependency=get_db)):
+    blogs = db.query(models.Blog).all()
+    return blogs
