@@ -35,3 +35,13 @@ def create(blog: Blog, db: Session = Depends(dependency=get_db)):
 def all_fetch(db: Session = Depends(dependency=get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
+
+
+@app.get("/blog/{article_id}")
+def show(article_id: int, db: Session = Depends(get_db)):
+    blog = (
+        db.query(models.Blog)
+        .filter(models.Blog.article_id == article_id)
+        .first()
+    )
+    return blog
