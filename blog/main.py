@@ -2,7 +2,7 @@
 from typing import Any, Generator
 
 # Third Party Library
-from fastapi import Depends, FastAPI, status, responses
+from fastapi import Depends, FastAPI, status, Response
 from sqlalchemy.orm import Session
 
 # Local Library
@@ -40,12 +40,13 @@ def all_fetch(db: Session = Depends(dependency=get_db)):
 
 
 @app.get("/blog/{article_id}", status_code=status.HTTP_200_OK)
-def show(article_id: int, db: Session = Depends(get_db)):
+def show(article_id: int, response: Response, db: Session = Depends(get_db)):
     blog = (
         db.query(models.Blog)
         .filter(models.Blog.article_id == article_id)
         .first()
     )
     if not blog:
-        responses.status_code = status.HTTP_404_NOT_FOUND
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"detail": f"Blog with the id {article_id} is not found"}
     return blog
