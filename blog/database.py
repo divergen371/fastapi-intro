@@ -12,6 +12,6 @@ engine: Engine = create_engine(
     url=DATABASE_URL, connect_args={"check_same_thread": False}
 )
 
-session_local = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+session_local = sessionmaker(bind=engine, autoflush=False)
 
 Base: Any = declarative_base()
