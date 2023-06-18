@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Any, Generator
+from typing import Any, Generator, List
 
 # Third Party Library
 from fastapi import Depends, FastAPI, HTTPException, status, Response
@@ -33,7 +33,7 @@ def create(blog: Blog, db: Session = Depends(dependency=get_db)):
     return new_blog
 
 
-@app.get(path="/blog")
+@app.get(path="/blog", response_model=List[ShowBlog])
 def all_fetch(db: Session = Depends(dependency=get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
