@@ -1,12 +1,10 @@
+# Third Party Library
 from fastapi import FastAPI
-from pydantic import BaseModel
+
+# Local Library
+from .schema import Blog
 
 app = FastAPI()
-
-
-class Blog(BaseModel):
-    title: str
-    body: str
 
 
 @app.post(path="/blog")
