@@ -3,6 +3,14 @@ from typing import Any, Optional
 
 # Third Party Library
 from fastapi import FastAPI
+from pydantic import BaseModel
+
+
+class Blog(BaseModel):
+    title: str
+    description: str
+    published_at: Optional[bool]
+
 
 app = FastAPI()
 
