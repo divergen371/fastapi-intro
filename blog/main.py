@@ -1,9 +1,10 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
 
-class Blog:
+class Blog(BaseModel):
     title: str
     body: str
 
