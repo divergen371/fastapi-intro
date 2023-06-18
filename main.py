@@ -27,10 +27,6 @@ def about() -> dict[str, set[str]]:
 
 @app.get(path="/blog")
 def item(limit: int = 10, published: bool = True) -> dict[str, str]:
-    """
-    docstring
-    """
-
     if published:
         return {"data": f"{limit}件"}
     else:
@@ -38,8 +34,8 @@ def item(limit: int = 10, published: bool = True) -> dict[str, str]:
 
 
 @app.post(path="/blog")
-def create_blog() -> dict[str, str]:
-    return {"data": "created"}
+def create_blog(blog: Blog) -> dict[str, Blog]:
+    return {"data": blog}
 
 
 @app.get(path="/blog/category")
