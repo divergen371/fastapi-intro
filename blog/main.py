@@ -52,3 +52,17 @@ def show(article_id: int, db: Session = Depends(get_db)):
             detail=f"Blog with the id {article_id} is not found.",
         )
     return blog
+
+
+@app.delete(path="/blog/{article_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete(article_id: int, db: Session = Depends(get_db)):
+    blog = db.query(models.Blog).filter(models.Blog.article_id == article_id)
+    if not blog.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Blog with the id {article_id} is not found",
+        )
+    blog.delete(synchronize_session=False)
+    db.commit()
+
+    return "Deletion of articles has been completed."
