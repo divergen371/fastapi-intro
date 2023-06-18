@@ -1,7 +1,5 @@
-# Standard Library
-from typing import Any
-
 # Third Party Library
+from typing import Any
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -14,4 +12,4 @@ engine: Engine = create_engine(
 
 session_local = sessionmaker(bind=engine, autoflush=False)
 
-Base: Any = declarative_base()
+Base: Any= declarative_base()

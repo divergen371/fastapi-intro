@@ -14,7 +14,7 @@ class Blog(Base):
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__: str = "users"
 
     user_id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
