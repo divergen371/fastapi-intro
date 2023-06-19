@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 # Local Library
 from . import models
-from .database import engine, session_local
+from .database import engine, session_local, get_db
 from .hashing import Hash
 from .models import Base
 from .schema import Blog, ShowBlog, User, ShowUser
@@ -17,12 +17,6 @@ app = FastAPI()
 Base.metadata.create_all(engine)
 
 
-def get_db() -> Generator[Session, Any, None]:
-    db: Session = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @app.post(path="/blog", status_code=status.HTTP_201_CREATED, tags=["blogs"])
