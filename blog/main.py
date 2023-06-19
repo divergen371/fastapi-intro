@@ -2,13 +2,13 @@
 from typing import Any, Generator, List
 
 # Third Party Library
-from passlib.context import CryptContext
-from fastapi import Depends, FastAPI, HTTPException, status, Response
+from fastapi import Depends, FastAPI, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 # Local Library
 from . import models
 from .database import engine, session_local
+from .hashing import Hash
 from .models import Base
 from .schema import Blog, ShowBlog, User
 
@@ -32,6 +32,20 @@ def create(blog: Blog, db: Session = Depends(dependency=get_db)):
     db.commit()
     db.refresh(instance=new_blog)
     return new_blog
+
+
+@app.delete(path="/blog/{article_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete(article_id: int, db: Session = Depends(get_db)):
+    blog = db.query(models.Blog).filter(models.Blog.article_id == article_id)
+    if not blog.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Blog with the id {article_id} is not found",
+        )
+    blog.delete(synchronize_session=False)
+    db.commit()
+
+    return "Deletion of articles has been completed."
 
 
 @app.get(path="/blog", response_model=List[ShowBlog])
@@ -59,20 +73,6 @@ def show(article_id: int, response: Response, db: Session = Depends(get_db)):
     return blog
 
 
-@app.delete(path="/blog/{article_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete(article_id: int, db: Session = Depends(get_db)):
-    blog = db.query(models.Blog).filter(models.Blog.article_id == article_id)
-    if not blog.first():
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Blog with the id {article_id} is not found",
-        )
-    blog.delete(synchronize_session=False)
-    db.commit()
-
-    return "Deletion of articles has been completed."
-
-
 @app.put(path="/blog/{article_id}", status_code=status.HTTP_202_ACCEPTED)
 def update(article_id, request: Blog, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.article_id == article_id)
@@ -86,14 +86,12 @@ def update(article_id, request: Blog, db: Session = Depends(get_db)):
     return "Update completed."
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 @app.post(path="/user")
 def create_user(request: User, db: Session = Depends(get_db)):
-    hashed_password = pwd_context.hash(request.password)
     new_user = models.User(
-        name=request.name, email=request.email, password=hashed_password
+        name=request.name,
+        email=request.email,
+        password=Hash.crypt(request.password),
     )
     db.add(new_user)
     db.commit()
