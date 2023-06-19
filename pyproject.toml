@@ -13,6 +13,7 @@ websockets = "^11.0.3"
 sqlalchemy = "^2.0.16"
 bcrypt = "^4.0.1"
 passlib = "^1.7.4"
+python-jose = "^3.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
