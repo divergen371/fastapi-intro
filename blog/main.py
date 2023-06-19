@@ -27,7 +27,7 @@ def get_db() -> Generator[Session, Any, None]:
 
 @app.post(path="/blog", status_code=status.HTTP_201_CREATED, tags=["blogs"])
 def create(blog: Blog, db: Session = Depends(dependency=get_db)):
-    new_blog = models.Blog(title=blog.title, body=blog.body)
+    new_blog = models.Blog(title=blog.title, body=blog.body, user_id=1)
     db.add(instance=new_blog)
     db.commit()
     db.refresh(instance=new_blog)
