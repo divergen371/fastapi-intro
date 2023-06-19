@@ -10,10 +10,10 @@ from .. import models
 from ..database import get_db
 from ..schema import Blog, ShowBlog
 
-router = APIRouter()
+router = APIRouter(prefix="/blog", tags=["blogs"])
 
 
-@router.post(path="/blog", status_code=status.HTTP_201_CREATED, tags=["blogs"])
+@router.post(path="", status_code=status.HTTP_201_CREATED)
 def create(blog: Blog, db: Session = Depends(dependency=get_db)):
     new_blog = models.Blog(title=blog.title, body=blog.body, user_id=1)
     db.add(instance=new_blog)
@@ -22,11 +22,7 @@ def create(blog: Blog, db: Session = Depends(dependency=get_db)):
     return new_blog
 
 
-@router.delete(
-    path="/blog/{article_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-    tags=["blogs"],
-)
+@router.delete(path="/{article_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete(article_id: int, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.article_id == article_id)
     if not blog.first():
@@ -40,17 +36,16 @@ def delete(article_id: int, db: Session = Depends(get_db)):
     return "Deletion of articles has been completed."
 
 
-@router.get(path="/blog", response_model=List[ShowBlog], tags=["blogs"])
+@router.get(path="", response_model=List[ShowBlog])
 def all_fetch(db: Session = Depends(dependency=get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
 
 
 @router.get(
-    "/blog/{article_id}",
+    "/{article_id}",
     status_code=status.HTTP_200_OK,
     response_model=ShowBlog,
-    tags=["blogs"],
 )
 def show(article_id: int, response: Response, db: Session = Depends(get_db)):
     blog = (
@@ -67,9 +62,8 @@ def show(article_id: int, response: Response, db: Session = Depends(get_db)):
 
 
 @router.put(
-    path="/blog/{article_id}",
+    path="/{article_id}",
     status_code=status.HTTP_202_ACCEPTED,
-    tags=["blogs"],
 )
 def update(article_id, request: Blog, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.article_id == article_id)
