@@ -1,11 +1,15 @@
+from typing import List
+
 # Third Party Library
 from pydantic import BaseModel
 
 
-class Blog(BaseModel):
+class BlogBase(BaseModel):
     title: str
     body: str
 
+
+class Blog(BlogBase):
     class Config:
         orm_mode = True
 
@@ -13,6 +17,7 @@ class Blog(BaseModel):
 class ShowUser(BaseModel):
     name: str
     email: str
+    blogs: List[Blog] = []
 
     class Config:
         orm_mode = True
