@@ -15,8 +15,12 @@ router = APIRouter(prefix="/blog", tags=["blogs"])
 
 
 @router.post(path="", status_code=status.HTTP_201_CREATED)
-def create(request: Blog, db: Session = Depends(dependency=get_db)):
-    return blog.create(blog=request, db=db)
+def create(
+    request: Blog,
+    db: Session = Depends(dependency=get_db),
+    current_user: User = Depends(oauth2.get_current_user),
+):
+    return blog.create(blog=request, db=db, current_user=current_user)
 
 
 @router.delete(path="/{article_id}", status_code=status.HTTP_204_NO_CONTENT)
