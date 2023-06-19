@@ -108,3 +108,9 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
             detail=f"User with the id {user_id} is not found.",
         )
     return user
+
+
+@app.get("/user", response_model=List[ShowUser])
+def all_user(db: Session = Depends(get_db)):
+    user = db.query(models.User).all()
+    return user
