@@ -7,8 +7,9 @@ from sqlalchemy.orm import Session
 
 # Local Library
 from ..database import get_db
-from ..schema import Blog, ShowBlog
+from ..schema import Blog, ShowBlog, User
 from ..fanctions import blog
+from .. import oauth2
 
 router = APIRouter(prefix="/blog", tags=["blogs"])
 
@@ -24,7 +25,10 @@ def delete(article_id: int, db: Session = Depends(get_db)):
 
 
 @router.get(path="", response_model=List[ShowBlog])
-def all_fetch(db: Session = Depends(dependency=get_db)):
+def all_fetch(
+    db: Session = Depends(dependency=get_db),
+    current_user: User = Depends(oauth2.get_current_user),
+):
     return blog.get_all(db=db)
 
 

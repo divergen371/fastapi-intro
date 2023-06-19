@@ -1,6 +1,8 @@
 from typing import Optional
 from datetime import datetime, timedelta
 from jose import jwt
+from jose.exceptions import JWTError
+from .schema import TokenData
 
 SECRET_KEY = "86cbacac5b899ec6071f8ded298fdaf805f92d24699b6fc77c7757fe6d6e9b2b"
 ALGORITHM = "HS256"
@@ -19,3 +21,18 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encode_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encode_jwt
+
+
+def verify_token(token: str, credentials_exception):
+    try:
+        payload = jwt.decode(
+            token=token, key=SECRET_KEY, algorithms=[ALGORITHM]
+        )
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = TokenData(email=email)
+    except JWTError:
+        raise credentials_exception
+
+    return token_data
