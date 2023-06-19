@@ -10,7 +10,7 @@ from . import models
 from .database import engine, session_local
 from .hashing import Hash
 from .models import Base
-from .schema import Blog, ShowBlog, User
+from .schema import Blog, ShowBlog, User, ShowUser
 
 app = FastAPI()
 
@@ -97,3 +97,14 @@ def create_user(request: User, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
+@app.get(path="/user/{user_id}", response_model=ShowUser)
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.user_id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with the id {user_id} is not found.",
+        )
+    return user
