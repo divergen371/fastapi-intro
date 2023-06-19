@@ -2,11 +2,10 @@
 from typing import List
 
 # Third Party Library
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 
 # Local Library
-from .. import models
 from ..database import get_db
 from ..schema import Blog, ShowBlog
 from ..fanctions import blog
