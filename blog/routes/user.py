@@ -15,6 +15,11 @@ def create_user(request: User, db: Session = Depends(get_db)):
     return user.create(request=request, db=db)
 
 
+@router.delete(path="/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    return user.destroy(user_id=user_id, db=db)
+
+
 @router.get(path="/{user_id}", response_model=ShowUser)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     return user.show(user_id=user_id, db=db)

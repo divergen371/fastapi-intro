@@ -17,6 +17,19 @@ def create(request: User, db: Session):
     return new_user
 
 
+def destroy(user_id: int, db: Session):
+    user = db.query(models.User).filter(models.User.user_id == user_id)
+    if not user.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with the id {user_id} is not found",
+        )
+    user.delete(synchronize_session=False)
+    db.commit()
+
+    return "Deletion of user has been completed."
+
+
 def show(user_id: int, db: Session):
     user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if not user:
