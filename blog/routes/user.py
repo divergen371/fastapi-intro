@@ -11,10 +11,10 @@ from ..database import get_db
 from ..hashing import Hash
 from ..schema import ShowUser, User
 
-router = APIRouter()
+router = APIRouter(prefix="/user", tags=["users"])
 
 
-@router.post(path="/user", tags=["users"])
+@router.post(path="")
 def create_user(request: User, db: Session = Depends(get_db)):
     new_user = models.User(
         name=request.name,
@@ -27,7 +27,7 @@ def create_user(request: User, db: Session = Depends(get_db)):
     return new_user
 
 
-@router.get(path="/user/{user_id}", response_model=ShowUser, tags=["users"])
+@router.get(path="/{user_id}", response_model=ShowUser)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if not user:
@@ -38,7 +38,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     return user
 
 
-@router.get("/user", response_model=List[ShowUser], tags=["users"])
+@router.get("", response_model=List[ShowUser])
 def all_user(db: Session = Depends(get_db)):
     user = db.query(models.User).all()
     return user
