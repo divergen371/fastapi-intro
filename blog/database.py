@@ -14,4 +14,16 @@ engine: Engine = create_engine(
 
 session_local = sessionmaker(bind=engine, autoflush=False)
 
-Base: Any= declarative_base()
+Base: Any = declarative_base()
+
+
+def get_db():
+    """
+    docstring
+    """
+    db = session_local()
+
+    try:
+        yield db
+    finally:
+        db.close()
